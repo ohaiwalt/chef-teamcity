@@ -38,3 +38,14 @@ else
   default['teamcity']['agent']['temp_dir'] = '../temp'
   default['teamcity']['agent']['system_dir'] = '../system'
 end
+
+default['teamcity']['server']['database']['username'] = 'root'
+default['teamcity']['server']['database']['password'] = 'Password1'
+default['teamcity']['server']['database']['connection_url'] = 'http://localhost:3306'
+default['teamcity']['server']['database']['jdbc_url'] = 'http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.36.tar.gz'
+default['teamcity']['server']['backup'] = $false
+
+default['mysqld']['root_password'] = 'Password1'
+
+default['java']['jdk_version'] = '7'
+

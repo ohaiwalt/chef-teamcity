@@ -15,28 +15,28 @@
 # limitations under the License.
 #
 
-TEAMCITY_VERSION = node['teamcity']['version'].freeze
-TEAMCITY_SERVICE_NAME = 'TCBuildAgent'.freeze
+TEAMCITY_VERSION = node['teamcity']['version']
+TEAMCITY_SERVICE_NAME = 'TCBuildAgent'
 
-TEAMCITY_AGENT_NAME = node['teamcity']['agent']['name'].freeze
-TEAMCITY_AGENT_SERVER_URI = node['teamcity']['agent']['server_uri'].freeze
-TEAMCITY_AGENT_FILE = 'buildAgent.zip'.freeze
-TEAMCITY_AGENT_URI = ::URI.join(TEAMCITY_AGENT_SERVER_URI, "update/#{TEAMCITY_AGENT_FILE}").to_s.freeze
-TEAMCITY_AGENT_WORK_DIR = node['teamcity']['agent']['work_dir'].freeze
-TEAMCITY_AGENT_TEMP_DIR = node['teamcity']['agent']['temp_dir'].freeze
-TEAMCITY_AGENT_SYSTEM_DIR = node['teamcity']['agent']['system_dir'].freeze
-TEAMCITY_AGENT_OWN_ADDRESS = node['teamcity']['agent']['own_address'].freeze
-TEAMCITY_AGENT_OWN_PORT = node['teamcity']['agent']['port'].freeze
-TEAMCITY_AGENT_AUTH_TOKEN = node['teamcity']['agent']['authorization_token'].freeze
-TEAMCITY_AGENT_SYSTEM_PROPERTIES = node['teamcity']['agent']['system_properties'].freeze
-TEAMCITY_AGENT_ENV_PROPERTIES = node['teamcity']['agent']['env_properties'].freeze
-TEAMCITY_AGENT_SRC_PATH = ::File.join(TEAMCITY_AGENT_SYSTEM_DIR, TEAMCITY_AGENT_FILE).freeze
-TEAMCITY_AGENT_CONFIG_PATH = "#{TEAMCITY_AGENT_SYSTEM_DIR}/conf".freeze
-TEAMCITY_AGENT_PROPERTIES = "#{TEAMCITY_AGENT_CONFIG_PATH}/buildAgent.properties".freeze
+TEAMCITY_AGENT_NAME = node['teamcity']['agent']['name']
+TEAMCITY_AGENT_SERVER_URI = node['teamcity']['agent']['server_uri']
+TEAMCITY_AGENT_FILE = 'buildAgent.zip'
+TEAMCITY_AGENT_URI = ::URI.join(TEAMCITY_AGENT_SERVER_URI, "update/#{TEAMCITY_AGENT_FILE}").to_s
+TEAMCITY_AGENT_WORK_DIR = node['teamcity']['agent']['work_dir']
+TEAMCITY_AGENT_TEMP_DIR = node['teamcity']['agent']['temp_dir']
+TEAMCITY_AGENT_SYSTEM_DIR = node['teamcity']['agent']['system_dir']
+TEAMCITY_AGENT_OWN_ADDRESS = node['teamcity']['agent']['own_address']
+TEAMCITY_AGENT_OWN_PORT = node['teamcity']['agent']['port']
+TEAMCITY_AGENT_AUTH_TOKEN = node['teamcity']['agent']['authorization_token']
+TEAMCITY_AGENT_SYSTEM_PROPERTIES = node['teamcity']['agent']['system_properties']
+TEAMCITY_AGENT_ENV_PROPERTIES = node['teamcity']['agent']['env_properties']
+TEAMCITY_AGENT_SRC_PATH = ::File.join(TEAMCITY_AGENT_SYSTEM_DIR, TEAMCITY_AGENT_FILE)
+TEAMCITY_AGENT_CONFIG_PATH = "#{TEAMCITY_AGENT_SYSTEM_DIR}/conf"
+TEAMCITY_AGENT_PROPERTIES = "#{TEAMCITY_AGENT_CONFIG_PATH}/buildAgent.properties"
 TEAMCITY_AGENT_BIN_PATH = ::File.join(TEAMCITY_AGENT_SYSTEM_DIR, 'bin')
 
-TEAMCITY_SRC_PATH = "#{TEAMCITY_AGENT_SYSTEM_DIR}.zip".freeze
-TEAMCITY_PID_FILE = "#{TEAMCITY_AGENT_SYSTEM_DIR}\\logs\\buildAgent.pid".freeze
+TEAMCITY_SRC_PATH = "#{TEAMCITY_AGENT_SYSTEM_DIR}.zip"
+TEAMCITY_PID_FILE = "#{TEAMCITY_AGENT_SYSTEM_DIR}\\logs\\buildAgent.pid"
 
 remote_file TEAMCITY_SRC_PATH do
   source TEAMCITY_AGENT_URI

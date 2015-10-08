@@ -15,34 +15,34 @@
 # limitations under the License.
 #
 
-TEAMCITY_VERSION = node['teamcity']['version'].freeze
-TEAMCITY_USERNAME = node['teamcity']['username'].freeze
-TEAMCITY_SERVICE_NAME = node['teamcity']['service_name'].freeze
-TEAMCITY_GROUP = node['teamcity']['group'].freeze
-TEAMCITY_HOME_PATH = "/home/#{TEAMCITY_USERNAME}".freeze
-TEAMCITY_PATH = "/opt/TeamCity-#{TEAMCITY_VERSION}".freeze
-TEAMCITY_INIT_LOCATION = "/etc/init.d/#{TEAMCITY_SERVICE_NAME}".freeze
+TEAMCITY_VERSION = node['teamcity']['version']
+TEAMCITY_USERNAME = node['teamcity']['username']
+TEAMCITY_SERVICE_NAME = node['teamcity']['service_name']
+TEAMCITY_GROUP = node['teamcity']['group']
+TEAMCITY_HOME_PATH = "/home/#{TEAMCITY_USERNAME}"
+TEAMCITY_PATH = "/opt/TeamCity-#{TEAMCITY_VERSION}"
+TEAMCITY_INIT_LOCATION = "/etc/init.d/#{TEAMCITY_SERVICE_NAME}"
 TEAMCITY_EXECUTABLE_MODE = 0755
 TEAMCITY_READ_MODE = 0644
 
-TEAMCITY_SRC_PATH = "#{TEAMCITY_PATH}.zip".freeze
-TEAMCITY_PID_FILE = "#{TEAMCITY_PATH}/logs/buildAgent.pid".freeze
-TEAMCITY_AGENT_NAME = node['teamcity']['agent']['name'].freeze
-TEAMCITY_AGENT_SERVER_URI = node['teamcity']['agent']['server_uri'].freeze
-TEAMCITY_AGENT_FILE = 'buildAgent.zip'.freeze
-TEAMCITY_AGENT_URI = ::URI.join(TEAMCITY_AGENT_SERVER_URI, "update/#{TEAMCITY_AGENT_FILE}").to_s.freeze
-TEAMCITY_AGENT_SRC_PATH = ::File.join(TEAMCITY_PATH, TEAMCITY_AGENT_FILE).freeze
-TEAMCITY_AGENT_CONFIG_PATH = "#{TEAMCITY_PATH}/conf".freeze
-TEAMCITY_AGENT_PROPERTIES = "#{TEAMCITY_AGENT_CONFIG_PATH}/buildAgent.properties".freeze
-TEAMCITY_AGENT_EXECUTABLE = "#{TEAMCITY_PATH}/bin/agent.sh".freeze
-TEAMCITY_AGENT_WORK_DIR = node['teamcity']['agent']['work_dir'].freeze
-TEAMCITY_AGENT_TEMP_DIR = node['teamcity']['agent']['temp_dir'].freeze
-TEAMCITY_AGENT_SYSTEM_DIR = node['teamcity']['agent']['system_dir'].freeze
-TEAMCITY_AGENT_OWN_ADDRESS = node['teamcity']['agent']['own_address'].freeze
-TEAMCITY_AGENT_OWN_PORT = node['teamcity']['agent']['port'].freeze
-TEAMCITY_AGENT_AUTH_TOKEN = node['teamcity']['agent']['authorization_token'].freeze
-TEAMCITY_AGENT_SYSTEM_PROPERTIES = node['teamcity']['agent']['system_properties'].freeze
-TEAMCITY_AGENT_ENV_PROPERTIES = node['teamcity']['agent']['env_properties'].freeze
+TEAMCITY_SRC_PATH = "#{TEAMCITY_PATH}.zip"
+TEAMCITY_PID_FILE = "#{TEAMCITY_PATH}/logs/buildAgent.pid"
+TEAMCITY_AGENT_NAME = node['teamcity']['agent']['name']
+TEAMCITY_AGENT_SERVER_URI = node['teamcity']['agent']['server_uri']
+TEAMCITY_AGENT_FILE = 'buildAgent.zip'
+TEAMCITY_AGENT_URI = ::URI.join(TEAMCITY_AGENT_SERVER_URI, "update/#{TEAMCITY_AGENT_FILE}").to_s
+TEAMCITY_AGENT_SRC_PATH = ::File.join(TEAMCITY_PATH, TEAMCITY_AGENT_FILE)
+TEAMCITY_AGENT_CONFIG_PATH = "#{TEAMCITY_PATH}/conf"
+TEAMCITY_AGENT_PROPERTIES = "#{TEAMCITY_AGENT_CONFIG_PATH}/buildAgent.properties"
+TEAMCITY_AGENT_EXECUTABLE = "#{TEAMCITY_PATH}/bin/agent.sh"
+TEAMCITY_AGENT_WORK_DIR = node['teamcity']['agent']['work_dir']
+TEAMCITY_AGENT_TEMP_DIR = node['teamcity']['agent']['temp_dir']
+TEAMCITY_AGENT_SYSTEM_DIR = node['teamcity']['agent']['system_dir']
+TEAMCITY_AGENT_OWN_ADDRESS = node['teamcity']['agent']['own_address']
+TEAMCITY_AGENT_OWN_PORT = node['teamcity']['agent']['port']
+TEAMCITY_AGENT_AUTH_TOKEN = node['teamcity']['agent']['authorization_token']
+TEAMCITY_AGENT_SYSTEM_PROPERTIES = node['teamcity']['agent']['system_properties']
+TEAMCITY_AGENT_ENV_PROPERTIES = node['teamcity']['agent']['env_properties']
 
 package 'unzip'
 
