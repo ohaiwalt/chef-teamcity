@@ -14,5 +14,5 @@ supports 'windows'
 
 depends 'java'
 depends 'git'
-depends 'mercurial'
-depends 'subversion'
+depends 'tarball'
+depends 'mysqld'

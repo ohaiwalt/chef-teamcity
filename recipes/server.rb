@@ -15,52 +15,49 @@
 # limitations under the License.
 #
 
-TEAMCITY_VERSION = node['teamcity']['version'].freeze
-TEAMCITY_USERNAME = node['teamcity']['username'].freeze
-TEAMCITY_SERVICE_NAME = node['teamcity']['service_name'].freeze
-TEAMCITY_GROUP = node['teamcity']['group'].freeze
-TEAMCITY_HOME_PATH = "/home/#{TEAMCITY_USERNAME}".freeze
-TEAMCITY_PATH = "/opt/TeamCity-#{TEAMCITY_VERSION}".freeze
-TEAMCITY_INIT_LOCATION = "/etc/init.d/#{TEAMCITY_SERVICE_NAME}".freeze
-TEAMCITY_EXECUTABLE_MODE = 0755
-TEAMCITY_READ_MODE = 0644
+TEAMCITY_VERSION = node['teamcity']['version']
+TEAMCITY_USERNAME = node['teamcity']['username']
+TEAMCITY_SERVICE_NAME = node['teamcity']['service_name']
+TEAMCITY_GROUP = node['teamcity']['group']
+TEAMCITY_HOME_PATH = "/home/#{TEAMCITY_USERNAME}"
+TEAMCITY_PATH = "/opt/TeamCity-#{TEAMCITY_VERSION}"
+TEAMCITY_INIT_LOCATION = "/etc/init.d/#{TEAMCITY_SERVICE_NAME}"
 
-TEAMCITY_SRC_PATH = "#{TEAMCITY_PATH}.tar.gz".freeze
-TEAMCITY_PID_FILE = "#{TEAMCITY_PATH}/logs/#{TEAMCITY_SERVICE_NAME}.pid".freeze
-TEAMCITY_DB_USERNAME = node['teamcity']['server']['database']['username'].freeze
-TEAMCITY_DB_PASSWORD = node['teamcity']['server']['database']['password'].freeze
-TEAMCITY_DB_CONNECTION_URL = node['teamcity']['server']['database']['connection_url'].freeze
-TEAMCITY_SERVER_EXECUTABLE = "#{TEAMCITY_PATH}/bin/teamcity-server.sh".freeze
-TEAMCITY_BIN_PATH = "#{TEAMCITY_PATH}/bin".freeze
-TEAMCITY_DATA_PATH = "#{TEAMCITY_PATH}/.BuildServer".freeze
-TEAMCITY_LIB_PATH = "#{TEAMCITY_DATA_PATH}/lib".freeze
-TEAMCITY_JDBC_PATH = "#{TEAMCITY_LIB_PATH}/jdbc".freeze
-TEAMCITY_CONFIG_PATH = "#{TEAMCITY_DATA_PATH}/config".freeze
-TEAMCITY_BACKUP_PATH = "#{TEAMCITY_DATA_PATH}/backup".freeze
-TEAMCITY_DATABASE_PROPS_NAME = 'database.properties'.freeze
-TEAMCITY_DATABASE_PROPS_PATH = "#{TEAMCITY_CONFIG_PATH}/#{TEAMCITY_DATABASE_PROPS_NAME}".freeze
-TEAMCITY_JAR_URI = node['teamcity']['server']['database']['jar'].freeze
+TEAMCITY_SRC_PATH = "#{TEAMCITY_PATH}.tar.gz"
+TEAMCITY_PID_FILE = "#{TEAMCITY_PATH}/logs/#{TEAMCITY_SERVICE_NAME}.pid"
+TEAMCITY_DB_USERNAME = node['teamcity']['server']['database']['username']
+TEAMCITY_DB_PASSWORD = node['teamcity']['server']['database']['password']
+TEAMCITY_DB_CONNECTION_URL = node['teamcity']['server']['database']['connection_url']
+TEAMCITY_SERVER_EXECUTABLE = "#{TEAMCITY_PATH}/TeamCity/bin/teamcity-server.sh"
+TEAMCITY_BIN_PATH = "#{TEAMCITY_PATH}/TeamCity/bin"
+TEAMCITY_DATA_PATH = "#{TEAMCITY_PATH}/.BuildServer"
+TEAMCITY_LIB_PATH = "#{TEAMCITY_DATA_PATH}/lib"
+TEAMCITY_JDBC_PATH = "#{TEAMCITY_LIB_PATH}/jdbc"
+TEAMCITY_CONFIG_PATH = "#{TEAMCITY_DATA_PATH}/config"
+TEAMCITY_BACKUP_PATH = "#{TEAMCITY_DATA_PATH}/backup"
+TEAMCITY_DATABASE_PROPS_NAME = 'database.properties'
+TEAMCITY_DATABASE_PROPS_PATH = "#{TEAMCITY_CONFIG_PATH}/#{TEAMCITY_DATABASE_PROPS_NAME}"
+TEAMCITY_JAR_URI = node['teamcity']['server']['database']['jdbc_url']
 TEAMCITY_BACKUP_FILE = node['teamcity']['server']['backup']
-TEAMCITY_JAR_NAME = ::File.basename(URI.parse(TEAMCITY_JAR_URI).path).freeze
+TEAMCITY_JAR_NAME = ::File.basename(URI.parse(TEAMCITY_JAR_URI).path)
 
 include_recipe 'chef-teamcity::default'
+include_recipe 'mysqld::default'
 
 remote_file TEAMCITY_SRC_PATH do
   source "http://download.jetbrains.com/teamcity/TeamCity-#{TEAMCITY_VERSION}.tar.gz"
   owner TEAMCITY_USERNAME
   group TEAMCITY_GROUP
-  mode TEAMCITY_READ_MODE
+  mode 0644
 end
 
-bash 'extract_teamcity' do
-  cwd '/opt'
-  code <<-EOH
-    mkdir -p #{TEAMCITY_PATH}
-    tar xzf #{TEAMCITY_SRC_PATH} -C #{TEAMCITY_PATH}
-    mv #{TEAMCITY_PATH}/*/* #{TEAMCITY_PATH}/
-    chown -R #{TEAMCITY_USERNAME}.#{TEAMCITY_GROUP} #{TEAMCITY_PATH}
-  EOH
-  not_if { ::File.exist?(TEAMCITY_PATH) }
+tarball '#{TEAMCITY_SRC_PATH}' do
+  destination '#{TEAMCITY_PATH}'
+  owner TEAMCITY_USERNAME
+  group TEAMCITY_GROUP
+  umask 002
+  action :extract
+  not_if { ::File.exist?(TEAMCITY_PATH) }  
 end
 
 paths = [
@@ -76,7 +73,7 @@ paths.each do |p|
     owner TEAMCITY_USERNAME
     group TEAMCITY_GROUP
     recursive true
-    mode TEAMCITY_EXECUTABLE_MODE
+    mode 0755
   end
 end
 
@@ -84,27 +81,35 @@ remote_file "#{TEAMCITY_JDBC_PATH}/#{TEAMCITY_JAR_NAME}" do
   source TEAMCITY_JAR_URI
   owner TEAMCITY_USERNAME
   group TEAMCITY_GROUP
-  mode TEAMCITY_READ_MODE
+  mode 0644
+end
+
+tarball "#{TEAMCITY_JDBC_PATH}/#{TEAMCITY_JAR_NAME}" do
+  destination TEAMCITY_JDBC_PATH
+  owner TEAMCITY_USERNAME
+  group TEAMCITY_GROUP
+  umask 002
+  action :extract
 end
 
 if TEAMCITY_BACKUP_FILE
-  backup_file = ::File.basename(URI.parse(TEAMCITY_BACKUP_FILE).path).freeze
-  processed_backup_file = File.basename(backup_file, '.*').freeze
-  backup_path = ::File.join(TEAMCITY_BACKUP_PATH, backup_file).freeze
-  processed_backup_path = ::File.join(TEAMCITY_BACKUP_PATH, processed_backup_file).freeze
-  home_database_props = ::File.join(TEAMCITY_HOME_PATH, TEAMCITY_DATABASE_PROPS_NAME).freeze
+  backup_file = ::File.basename(URI.parse(TEAMCITY_BACKUP_FILE).path)
+  processed_backup_file = File.basename(backup_file, '.*')
+  backup_path = ::File.join(TEAMCITY_BACKUP_PATH, backup_file)
+  processed_backup_path = ::File.join(TEAMCITY_BACKUP_PATH, processed_backup_file)
+  home_database_props = ::File.join(TEAMCITY_HOME_PATH, TEAMCITY_DATABASE_PROPS_NAME)
 
   remote_file backup_path do
     source TEAMCITY_BACKUP_FILE
     owner TEAMCITY_USERNAME
     group TEAMCITY_GROUP
-    mode TEAMCITY_READ_MODE
+    mode 0644
     not_if { ::File.exist?(processed_backup_path) }
   end
 
   template home_database_props do
     source 'database.properties.erb'
-    mode TEAMCITY_READ_MODE
+    mode 0644
     owner TEAMCITY_USERNAME
     group TEAMCITY_GROUP
     variables(
@@ -128,7 +133,7 @@ end
 
 template TEAMCITY_DATABASE_PROPS_PATH do
   source 'database.properties.erb'
-  mode TEAMCITY_READ_MODE
+  mode 0644
   owner TEAMCITY_USERNAME
   group TEAMCITY_GROUP
   variables(
@@ -141,7 +146,7 @@ end
 
 template TEAMCITY_INIT_LOCATION do
   source 'teamcity_server_init.erb'
-  mode TEAMCITY_EXECUTABLE_MODE
+  mode 0755
   owner 'root'
   group 'root'
   variables(
