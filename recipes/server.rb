@@ -51,8 +51,8 @@ remote_file TEAMCITY_SRC_PATH do
   mode 0644
 end
 
-tarball '#{TEAMCITY_SRC_PATH}' do
-  destination '#{TEAMCITY_PATH}'
+tarball "#{TEAMCITY_SRC_PATH}" do
+  destination "#{TEAMCITY_PATH}"
   owner TEAMCITY_USERNAME
   group TEAMCITY_GROUP
   umask 002

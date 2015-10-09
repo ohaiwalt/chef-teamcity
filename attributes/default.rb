@@ -47,5 +47,6 @@ default['teamcity']['server']['backup'] = $false
 
 default['mysqld']['root_password'] = 'Password1'
 
-default['java']['jdk_version'] = '7'
+default['java']['jdk_version'] = '8'
+default['java']['oracle']['accept_oracle_download_terms'] = true
 

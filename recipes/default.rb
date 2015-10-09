@@ -20,7 +20,7 @@ TEAMCITY_PASSWORD = node['teamcity']['password']
 TEAMCITY_GROUP = node['teamcity']['group']
 TEAMCITY_HOME_PATH = "/home/#{TEAMCITY_USERNAME}"
 
-include_recipe 'java'
+include_recipe 'java::oracle'
 include_recipe 'git'
 
 if node['platform'] != 'windows'
