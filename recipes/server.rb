@@ -40,9 +40,19 @@ TEAMCITY_DATABASE_PROPS_PATH = "#{TEAMCITY_CONFIG_PATH}/#{TEAMCITY_DATABASE_PROP
 TEAMCITY_JAR_URI = node['teamcity']['server']['database']['jdbc_url']
 TEAMCITY_BACKUP_FILE = node['teamcity']['server']['backup']
 TEAMCITY_JAR_NAME = ::File.basename(URI.parse(TEAMCITY_JAR_URI).path)
+TEAMCITY_JDBC_NAME = TEAMCITY_JAR_NAME.split('.')[0] + '.' + TEAMCITY_JAR_NAME.split('.')[1] + '.' + TEAMCITY_JAR_NAME.split('.')[2]
+
 
 include_recipe 'chef-teamcity::default'
 include_recipe 'mysqld::default'
+
+bash 'create mysqldb' do
+  user 'root'
+  cwd '/tmp'
+  code <<-EOH
+    mysql -u #{TEAMCITY_DB_USERNAME} -p#{TEAMCITY_DB_PASSWORD} -e "CREATE DATABASE IF NOT EXISTS #{node['teamcity']['server']['database']['name']};"
+  EOH
+end
 
 remote_file TEAMCITY_SRC_PATH do
   source "http://download.jetbrains.com/teamcity/TeamCity-#{TEAMCITY_VERSION}.tar.gz"
@@ -90,6 +100,16 @@ tarball "#{TEAMCITY_JDBC_PATH}/#{TEAMCITY_JAR_NAME}" do
   group TEAMCITY_GROUP
   umask 002
   action :extract
+end
+
+bash 'move jdbc jar and cleanup' do
+  user 'root'
+  cwd '/tmp'
+  code <<-EOH
+    mv #{TEAMCITY_JDBC_PATH}/#{TEAMCITY_JDBC_NAME}/#{TEAMCITY_JDBC_NAME}-bin.jar #{TEAMCITY_JDBC_PATH}/#{TEAMCITY_JDBC_NAME}-bin.jar
+    rm -rf #{TEAMCITY_JDBC_PATH}/#{TEAMCITY_JDBC_NAME}/
+    rm -rf #{TEAMCITY_JDBC_PATH}/#{TEAMCITY_JAR_NAME}
+  EOH
 end
 
 if TEAMCITY_BACKUP_FILE
