@@ -66,7 +66,7 @@ tarball "#{TEAMCITY_SRC_PATH}" do
   destination "#{TEAMCITY_PATH}"
   owner TEAMCITY_USERNAME
   group TEAMCITY_GROUP
-  umask 002
+  umask 022
   action :extract
   not_if { ::File.exists?(TEAMCITY_PATH) }  
 end
@@ -100,7 +100,7 @@ tarball "#{TEAMCITY_JDBC_PATH}/#{TEAMCITY_JAR_NAME}" do
   destination TEAMCITY_JDBC_PATH
   owner TEAMCITY_USERNAME
   group TEAMCITY_GROUP
-  umask 002
+  umask 022
   action :extract
   not_if { ::File.exists?("#{TEAMCITY_JDBC_PATH}/#{TEAMCITY_JDBC_NAME}-bin.jar") } 
 end
