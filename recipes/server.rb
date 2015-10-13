@@ -59,6 +59,7 @@ remote_file TEAMCITY_SRC_PATH do
   owner TEAMCITY_USERNAME
   group TEAMCITY_GROUP
   mode 0644
+  not_if { ::File.exists?("#{TEAMCITY_PATH}") } 
 end
 
 tarball "#{TEAMCITY_SRC_PATH}" do
@@ -67,7 +68,7 @@ tarball "#{TEAMCITY_SRC_PATH}" do
   group TEAMCITY_GROUP
   umask 002
   action :extract
-  not_if { ::File.exist?(TEAMCITY_PATH) }  
+  not_if { ::File.exists?(TEAMCITY_PATH) }  
 end
 
 paths = [
@@ -92,6 +93,7 @@ remote_file "#{TEAMCITY_JDBC_PATH}/#{TEAMCITY_JAR_NAME}" do
   owner TEAMCITY_USERNAME
   group TEAMCITY_GROUP
   mode 0644
+  not_if { ::File.exists?("#{TEAMCITY_JDBC_PATH}/#{TEAMCITY_JDBC_NAME}-bin.jar") } 
 end
 
 tarball "#{TEAMCITY_JDBC_PATH}/#{TEAMCITY_JAR_NAME}" do
@@ -100,6 +102,7 @@ tarball "#{TEAMCITY_JDBC_PATH}/#{TEAMCITY_JAR_NAME}" do
   group TEAMCITY_GROUP
   umask 002
   action :extract
+  not_if { ::File.exists?("#{TEAMCITY_JDBC_PATH}/#{TEAMCITY_JDBC_NAME}-bin.jar") } 
 end
 
 bash 'move jdbc jar and cleanup' do
@@ -110,6 +113,7 @@ bash 'move jdbc jar and cleanup' do
     rm -rf #{TEAMCITY_JDBC_PATH}/#{TEAMCITY_JDBC_NAME}/
     rm -rf #{TEAMCITY_JDBC_PATH}/#{TEAMCITY_JAR_NAME}
   EOH
+  not_if { ::File.exists?("#{TEAMCITY_JDBC_PATH}/#{TEAMCITY_JDBC_NAME}-bin.jar") } 
 end
 
 if TEAMCITY_BACKUP_FILE
@@ -124,7 +128,7 @@ if TEAMCITY_BACKUP_FILE
     owner TEAMCITY_USERNAME
     group TEAMCITY_GROUP
     mode 0644
-    not_if { ::File.exist?(processed_backup_path) }
+    not_if { ::File.exists?(processed_backup_path) }
   end
 
   template home_database_props do
@@ -147,7 +151,7 @@ if TEAMCITY_BACKUP_FILE
       rm -f #{backup_path}
       touch #{processed_backup_path}
     EOH
-    not_if { ::File.exist?(processed_backup_path) }
+    not_if { ::File.exists?(processed_backup_path) }
   end
 end
 
