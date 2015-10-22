@@ -20,16 +20,16 @@ TEAMCITY_USERNAME = node['teamcity']['username']
 TEAMCITY_SERVICE_NAME = node['teamcity']['service_name']
 TEAMCITY_GROUP = node['teamcity']['group']
 TEAMCITY_HOME_PATH = "/home/#{TEAMCITY_USERNAME}"
-TEAMCITY_PATH = "/opt/TeamCity-#{TEAMCITY_VERSION}"
+TEAMCITY_PATH = "/opt/TeamCity"
 TEAMCITY_INIT_LOCATION = "/etc/init.d/#{TEAMCITY_SERVICE_NAME}"
 
-TEAMCITY_SRC_PATH = "#{TEAMCITY_PATH}.tar.gz"
+TEAMCITY_SRC_PATH = "#{TEAMCITY_PATH}-#{TEAMCITY_VERSION}.tar.gz"
 TEAMCITY_PID_FILE = "#{TEAMCITY_PATH}/logs/#{TEAMCITY_SERVICE_NAME}.pid"
 TEAMCITY_DB_USERNAME = node['teamcity']['server']['database']['username']
 TEAMCITY_DB_PASSWORD = node['teamcity']['server']['database']['password']
 TEAMCITY_DB_CONNECTION_URL = node['teamcity']['server']['database']['connection_url']
-TEAMCITY_SERVER_EXECUTABLE = "#{TEAMCITY_PATH}/TeamCity/bin/teamcity-server.sh"
-TEAMCITY_BIN_PATH = "#{TEAMCITY_PATH}/TeamCity/bin"
+TEAMCITY_SERVER_EXECUTABLE = "#{TEAMCITY_PATH}/bin/teamcity-server.sh"
+TEAMCITY_BIN_PATH = "#{TEAMCITY_PATH}/bin"
 TEAMCITY_DATA_PATH = "#{TEAMCITY_PATH}/.BuildServer"
 TEAMCITY_LIB_PATH = "#{TEAMCITY_DATA_PATH}/lib"
 TEAMCITY_JDBC_PATH = "#{TEAMCITY_LIB_PATH}/jdbc"
@@ -63,7 +63,7 @@ remote_file TEAMCITY_SRC_PATH do
 end
 
 tarball "#{TEAMCITY_SRC_PATH}" do
-  destination "#{TEAMCITY_PATH}"
+  destination "/opt"
   owner TEAMCITY_USERNAME
   group TEAMCITY_GROUP
   umask 022

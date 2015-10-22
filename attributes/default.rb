@@ -15,10 +15,11 @@
 # limitations under the License.
 #
 
-default['teamcity']['version'] = '9.0'
+default['teamcity']['version'] = '9.1.3'
 default['teamcity']['username'] = 'teamcity'
 default['teamcity']['group'] = 'teamcity'
 default['teamcity']['service_name'] = 'teamcity'
+
 
 default['teamcity']['agent']['name'] = node['hostname']
 default['teamcity']['agent']['server_uri'] = nil
@@ -39,13 +40,12 @@ else
   default['teamcity']['agent']['system_dir'] = '../system'
 end
 
+default['teamcity']['server']['database']['name'] = 'teamcity'
 default['teamcity']['server']['database']['username'] = 'root'
 default['teamcity']['server']['database']['password'] = 'Password1'
-default['teamcity']['server']['database']['connection_url'] = 'http://localhost:3306'
+default['teamcity']['server']['database']['connection_url'] = "jdbc\:mysql\:///#{node['teamcity']['server']['database']['name']}"
 default['teamcity']['server']['database']['jdbc_url'] = 'http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.36.tar.gz'
 default['teamcity']['server']['backup'] = $false
-
-default['mysqld']['root_password'] = 'Password1'
 
 default['java']['jdk_version'] = '8'
 default['java']['oracle']['accept_oracle_download_terms'] = true
